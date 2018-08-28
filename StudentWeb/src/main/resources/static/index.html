@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html data-ng-app="studentWebApp">
+<head>
+	<meta charset="ISO-8859-1">
+	<title>StudentWeb - Student Roster</title>
+	<script src="./js/jquery-ui/external/jquery/jquery.js"></script>
+	<script src="./js/jquery-ui/jquery-ui.js"></script>
+	<script src="./js/angular/angular.js"></script>
+	<script src="./js/controllers.js"></script>
+	<link href="./js/jquery-ui/jquery-ui.css" rel="stylesheet">
+</head>
+<body data-ng-controller="StudentWebCtrl">
+	<div id="" style="display: table;">
+		<div style="display: table-caption; border: 1px solid black; width: 1002px; height: 100px; padding: 2px">
+			<h1>StudentWeb - Maintain Roster</h1>
+		</div>
+		<div style="display: table-row">
+			<div id="studentListPane" style="display: table-cell; border: 1px solid black; width: 350px; height: 500px; padding: 1px">
+				<fieldset>
+					<legend>Students:</legend>
+					<div id="studentSearchForm" style="display: table; border-collapse: separate; border-spacing: 5px;">
+						<div style="display: table-row;">
+							<div style="display: table-cell; padding:2px">Search: </div>
+							<div style="display: table-cell; padding:2px"><input data-ng-model="query"></div>
+						</div>
+						<div style="display: table-row;">
+							<div style="display: table-cell; padding:2px">Sort By: </div>
+							<div style="display: table-cell; padding:2px">
+								<select data-ng-model="orderProp">
+				  					<option value="firstName">First Name Alpha</option>
+				  					<option value="lastName">Last Name Alpha</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+				<div id="studentList" style="display: none">
+					<ul>
+						<li data-ng-repeat="student in students | filter:query | orderBy:orderProp">
+							<a data-ng-click="load(student.studentId)" href="">{{student.firstName}} {{student.lastName}}</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div id="formPane" style="display: table-cell; border: 1px solid black; width: 650px; height: 500px; padding: 1px">
+				<div id="new" style="display: none">
+					<form id="addForm">
+						<fieldset>
+							<legend>Add New Student:</legend>
+							
+							<div id="addForm" style="display: table; border-collapse: separate; border-spacing: 5px;">
+								<div style="display: table-row;">
+									<div style="display: table-cell; padding:2px">First Name: </div>
+									<div style="display: table-cell; padding:2px"><input data-ng-model="firstName" type="text"></div>
+								</div>
+								<div style="display: table-row;">
+									<div style="display: table-cell; padding:2px">Last Name: </div>
+									<div style="display: table-cell; padding:2px"><input data-ng-model="lastName" type="text"></div>
+								</div>
+								<div style="display: table-row;">
+									<div style="display: table-cell; padding:2px">Student Id: </div>
+									<div style="display: table-cell; padding:2px"><input data-ng-model="studentId" type="text" disabled></div>
+								</div>
+								<div style="display: table-row;">
+									<div style="display: table-cell; padding:2px">Grade Point Average: </div>
+									<div style="display: table-cell; padding:2px"><input data-ng-model="gpa" type="text"></div>
+								</div>
+								<div style="display: table-row;">
+									<div style="display: table-cell; padding:2px">Graduation Year: </div>
+									<div style="display: table-cell; padding:2px"><input data-ng-model="graduationYear" type="text"></div>
+								</div>
+								<div style="display: table-row;">
+									<div style="display: table-cell; padding:2px">
+										<button data-ng-click="add()">Add Student</button>
+									</div>
+									<div style="display: table-cell; padding:2px">&nbsp;</div>
+								</div>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+				
+				<div id="edit" style="display: none">
+					<form id="editForm">
+						<fieldset>
+							<legend>Edit Student ({{firstName}} {{lastName}}):</legend>
+							<div id="editTable" style="display: table; border-collapse: separate; border-spacing: 5px;">
+								<div style="display: table-row;">
+									<div style="display: table-cell; padding:2px">First Name: </div>
+									<div style="display: table-cell; padding:2px"><input data-ng-model="firstName" type="text"></div>
+								</div>
+								<div style="display: table-row;">
+									<div style="display: table-cell; padding:2px">Last Name: </div>
+									<div style="display: table-cell; padding:2px"><input data-ng-model="lastName" type="text"></div>
+								</div>
+								<div style="display: table-row;">
+									<div style="display: table-cell; padding:2px">Student Id: </div>
+									<div style="display: table-cell; padding:2px"><input data-ng-model="studentId" type="text" disabled></div>
+								</div>
+								<div style="display: table-row;">
+									<div style="display: table-cell; padding:2px">Grade Point Average: </div>
+									<div style="display: table-cell; padding:2px"><input data-ng-model="gpa" type="text"></div>
+								</div>
+								<div style="display: table-row;">
+									<div style="display: table-cell; padding:2px">Graduation Year: </div>
+									<div style="display: table-cell; padding:2px"><input data-ng-model="graduationYear" type="text"></div>
+								</div>
+								<div style="display: table-row;">
+									<div style="display: table-cell; padding:2px">
+										<button data-ng-click="update(studentId)">Update Student</button>
+									</div>
+									<div style="display: table-cell; padding:2px">&nbsp;</div>
+								</div>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+				
+				<div id="view" style="display: none">
+					<fieldset>
+						<legend>Student ({{firstName}} {{lastName}}):</legend>
+						
+						<div id="viewForm" style="display: table; border-collapse: separate; border-spacing: 5px;">
+							<div style="display: table-row;">
+								<div style="display: table-cell; padding:2px">First Name: </div>
+								<div style="display: table-cell; padding:2px"><input data-ng-model="firstName" type="text" disabled></div>
+							</div>
+							<div style="display: table-row;">
+								<div style="display: table-cell; padding:2px">Last Name: </div>
+								<div style="display: table-cell; padding:2px"><input data-ng-model="lastName" type="text" disabled></div>
+							</div>
+							<div style="display: table-row;">
+								<div style="display: table-cell; padding:2px">Student Id: </div>
+								<div style="display: table-cell; padding:2px"><input data-ng-model="studentId" type="text" disabled size="50"></div>
+							</div>
+							<div style="display: table-row;">
+								<div style="display: table-cell; padding:2px">Grade Point Average: </div>
+								<div style="display: table-cell; padding:2px"><input data-ng-model="gpa" type="text" disabled></div>
+							</div>
+							<div style="display: table-row;">
+								<div style="display: table-cell; padding:2px">Graduation Year: </div>
+								<div style="display: table-cell; padding:2px"><input data-ng-model="graduationYear" type="text" disabled></div>
+							</div>
+							<div style="display: table-row;">
+								<div style="display: table-cell; padding:2px">
+									<button data-ng-click="showAdd()">Add New Student</button>
+								</div>
+								<div style="display: table-cell; padding:2px">
+									<span>
+										<button data-ng-click="showEdit(studentId)">Edit This Student</button>
+										<button data-ng-click="deleteStudent(studentId)">Delete Student</button>
+									</span>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+		</div>	
+	</div>
+</body>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#studentList').show(); 
+		$('#new').show();
+	});
+</script>
+</html>
